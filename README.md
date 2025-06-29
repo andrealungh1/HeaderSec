@@ -19,7 +19,7 @@ HeaderSec can:
 
 HeaderSec can be installed in different ways:
 
-### Install via `go install`
+### Install via go install
 
 ```bash
 go install github.com/yourusername/headsec/cmd/headsec@latest
@@ -34,7 +34,6 @@ If you prefer to run from source:
 ```bash
 git clone ...
 cd HeaderSec
-cd cmd
 go run HeaderSec.go -h
 ```
 

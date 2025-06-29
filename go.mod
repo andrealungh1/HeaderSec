@@ -1,4 +1,4 @@
-module headsec
+module github.com/andrealungh1/HeaderSec
 
 go 1.23.0
 

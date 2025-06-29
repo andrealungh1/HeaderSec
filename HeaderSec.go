@@ -6,10 +6,10 @@ import (
 	"os"
 	"path/filepath"
 	
-	"headsec/config"
-	"headsec/output"
-	"headsec/scanner"
-	"headsec/transport"
+	"github.com/andrealungh1/HeaderSec/config"
+	"github.com/andrealungh1/HeaderSec/output"
+	"github.com/andrealungh1/HeaderSec/scanner"
+	"github.com/andrealungh1/HeaderSec/transport"
 )
 
 func main() {

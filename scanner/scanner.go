@@ -11,7 +11,7 @@ import (
 	"strings"
 	"sync"
 	"os"
-	"headsec/output"
+	"github.com/andrealungh1/HeaderSec/output"
 )
 
 type Config struct {

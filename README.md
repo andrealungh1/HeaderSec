@@ -40,7 +40,7 @@ go run HeaderSec.go -h
 
 ### Download Prebuilt Binaries
 
-You can download precompiled binaries from the [Releases](https://github.com/yourusername/headsec/releases) page (Linux, macOS, Windows).
+You can download precompiled binaries from the [Releases](https://github.com/andrealungh1/HeaderSec/releases/) page (Linux, macOS, Windows).
 
 ```bash
 # Example for Linux x86_64

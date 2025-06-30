@@ -22,7 +22,7 @@ HeaderSec can be installed in different ways:
 ### Install via go install
 
 ```bash
-go install github.com/yourusername/headsec/cmd/headsec@latest
+go install github.com/andrealungh1/HeaderSec@latest
 ```
 
 The HeaderSec binary will be placed in your `$GOPATH/bin` (or `$HOME/go/bin` by default). Make sure that directory is in your PATH.
@@ -32,7 +32,7 @@ The HeaderSec binary will be placed in your `$GOPATH/bin` (or `$HOME/go/bin` by 
 If you prefer to run from source:
 
 ```bash
-git clone ...
+git clone https://github.com/andrealungh1/HeaderSec.git
 cd HeaderSec
 go run HeaderSec.go -h
 ```
@@ -44,7 +44,7 @@ You can download precompiled binaries from the [Releases](https://github.com/you
 
 ```bash
 # Example for Linux x86_64
-wget https://github.com/yourusername/headsec/releases/download/vX.Y.Z/headsec-linux-amd64
+wget https://github.com/andrealungh1/HeaderSec/releases/download/v1.0.1/HeaderSec-linux-amd64
 chmod +x headsec-linux-amd64
 ./headsec-linux-amd64
 ```

@@ -53,7 +53,7 @@ chmod +x HeaderSec-linux-amd64
 
 ### Run with Docker
 
-You can also build and run HeadSec using Docker:
+You can also build and run HeaderSec using Docker:
 
 ```bash
 docker build -t headsec .

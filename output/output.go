@@ -11,17 +11,31 @@ import (
 	"golang.org/x/term"
 )
 
-const (
-	Red    = "\x1b[31m"
-	Green  = "\x1b[32m"
-	Yellow = "\x1b[33m"
-	Bold   = "\x1b[1m"
-	Reset  = "\x1b[0m"
+var (
+    
+    ColorEnabled = true
 
-	tick  = "✓"
-	cross = "✕"
-	warn  = "!"
+    
+    Red    = "\x1b[31m"
+    Green  = "\x1b[32m"
+    Yellow = "\x1b[33m"
+    Cyan   = "\x1b[36;1m" 
+    Bold   = "\x1b[1m"
+    Reset  = "\x1b[0m"
+
+    tick  = "✓"
+    cross = "✕"
+    warn  = "!"
 )
+
+func DisableColors() {
+    if !ColorEnabled {
+        return
+    }
+    ColorEnabled = false
+    Red, Green, Yellow, Cyan, Bold, Reset = "", "", "", "", "", ""
+}
+
 
 var (
 	red = func(s string) string {

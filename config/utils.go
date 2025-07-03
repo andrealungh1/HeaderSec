@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"github.com/andrealungh1/HeaderSec/output"
 )
 
 
@@ -15,7 +16,7 @@ const Banner =
 " |  _  |  __/ (_| | (_| |  __/ |   ___) |  __/ (__ \n" +
 " |_| |_|\\___|\\__,_|\\__,_|\\___|_|  |____/ \\___|\\___|\n" +
 "                                                  \n" +
-"  	 By Andrea Lunghi v1.0\n";
+"  	 By Andrea Lunghi v1.0.2\n";
 
 
 func collectTargets(single, file string) ([]string, error) {
@@ -88,8 +89,7 @@ func DedupeURLs(urls []string) []string {
 }
 
 func PrintBanner() {
-    cyan := "\033[36;1m" 
-    reset := "\033[0m"    
-    fmt.Print("\n", cyan, Banner, reset, "\n\n")
-}
+       fmt.Print("\n", output.Cyan, Banner, output.Reset, "\n\n")
+    }
+
 

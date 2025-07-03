@@ -47,16 +47,23 @@ func main() {
 	fmt.Fprintln(flag.CommandLine.Output(), "Output:")
 	fmt.Fprintln(flag.CommandLine.Output(), "  -json string\n\tOutput JSON file ('-' for stdout)")
 	fmt.Fprintln(flag.CommandLine.Output(), "  -no-banner\n\tDon't print the ASCII banner at start-up")
+	fmt.Fprintln(flag.CommandLine.Output(), "  -no-color\n\tDisable ANSI colours in output")
 }
 
 
     	
 	cfg, err := config.Parse()
 	
+	
 	if flag.NFlag() == 0 {
     	   fmt.Println("\n\033[31mNo flags provided. Please specify at least -url\033[0m")
     	   return
 	}
+	
+	if cfg.NoColor {
+    output.DisableColors()
+   }
+
 	
 	if !cfg.NoBanner {
     	   config.PrintBanner()

@@ -25,6 +25,7 @@ type App struct {
 	Insecure   bool
 	Proxy      string
 	NoBanner   bool
+	NoColor  bool
 }
 
 func Parse() (*App, error) {
@@ -47,6 +48,7 @@ func Parse() (*App, error) {
 	insecure  = flag.Bool("insecure", false, "Skip TLS certificate verification")
 	proxyURL  = flag.String("proxy", "", "Proxy URL, e.g. http://127.0.0.1:8080")
 	noBanner  = flag.Bool("no-banner", false, "Don't print banner")
+	noColor  = flag.Bool("no-color", false, "Disable ANSI colours in output")
 )
 
 
@@ -84,5 +86,6 @@ func Parse() (*App, error) {
 		Insecure:   *insecure,
 		Proxy:      *proxyURL,
 		NoBanner: *noBanner,
+		NoColor:  *noColor,
 	}, nil
 }

@@ -64,7 +64,7 @@ docker run --rm headsec -h
 
 Use the `-h` flag to display all the options.
 
-```bash
+```
 
 Usage: HeaderSec -url <URL> [options]
 
@@ -115,6 +115,7 @@ Output:
         Don't print the ASCII banner at start-up
   -no-color
         Disable ANSI colours in output
+
 ```
 
 

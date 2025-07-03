@@ -44,7 +44,7 @@ You can download precompiled binaries from the [Releases](https://github.com/and
 
 ```
 # Example for Linux x86_64
-wget https://github.com/andrealungh1/HeaderSec/releases/download/v1.0.1/HeaderSec-linux-amd64
+wget https://github.com/andrealungh1/HeaderSec/releases/download/v1.0.2/HeaderSec-linux-amd64
 chmod +x HeaderSec-linux-amd64
 ./HeaderSec-linux-amd64
 ```

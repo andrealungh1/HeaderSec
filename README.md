@@ -113,6 +113,8 @@ Output:
         Output JSON file ('-' for stdout)
   -no-banner
         Don't print the ASCII banner at start-up
+  -no-color
+        Disable ANSI colours in output
 ```
 
 

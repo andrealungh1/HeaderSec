@@ -21,7 +21,7 @@ HeaderSec can be installed in different ways:
 
 ### Install via go install
 
-```bash
+```
 go install github.com/andrealungh1/HeaderSec@latest
 ```
 
@@ -31,7 +31,7 @@ The HeaderSec binary will be placed in your `$GOPATH/bin` (or `$HOME/go/bin` by 
 
 If you prefer to run from source:
 
-```bash
+```
 git clone https://github.com/andrealungh1/HeaderSec.git
 cd HeaderSec
 go run HeaderSec.go -h
@@ -42,7 +42,7 @@ go run HeaderSec.go -h
 
 You can download precompiled binaries from the [Releases](https://github.com/andrealungh1/HeaderSec/releases/) page (Linux, macOS, Windows).
 
-```bash
+```
 # Example for Linux x86_64
 wget https://github.com/andrealungh1/HeaderSec/releases/download/v1.0.1/HeaderSec-linux-amd64
 chmod +x HeaderSec-linux-amd64
@@ -55,7 +55,7 @@ chmod +x HeaderSec-linux-amd64
 
 You can also build and run HeaderSec using Docker:
 
-```bash
+```
 docker build -t headsec .
 docker run --rm headsec -h
 ```
@@ -115,7 +115,6 @@ Output:
         Don't print the ASCII banner at start-up
   -no-color
         Disable ANSI colours in output
-
 ```
 
 

@@ -65,7 +65,6 @@ docker run --rm headsec -h
 Use the `-h` flag to display all the options.
 
 ```
-
 Usage: HeaderSec -url <URL> [options]
 
 Target selection:

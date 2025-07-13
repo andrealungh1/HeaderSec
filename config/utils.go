@@ -14,7 +14,7 @@ const Banner = "  _   _                _           ____            \n" +
 	" |  _  |  __/ (_| | (_| |  __/ |   ___) |  __/ (__ \n" +
 	" |_| |_|\\___|\\__,_|\\__,_|\\___|_|  |____/ \\___|\\___|\n" +
 	"                                                  \n" +
-	"  	 By Andrea Lunghi v1.0.2\n"
+	"  	 By Andrea Lunghi v1.0.3\n"
 
 func collectTargets(single, file string) ([]string, error) {
 	var targets []string

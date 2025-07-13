@@ -3,21 +3,18 @@ package config
 import (
 	"bufio"
 	"fmt"
+	"github.com/andrealungh1/HeaderSec/output"
 	"os"
 	"strings"
-	"github.com/andrealungh1/HeaderSec/output"
 )
 
-
-const Banner = 
-"  _   _                _           ____            \n" +
-" | | | | ___  __ _  __| | ___ _ __/ ___|  ___  ___ \n" +
-" | |_| |/ _ \\/ _` |/ _` |/ _ \\ '__\\___ \\ / _ \\/ __|\n" +
-" |  _  |  __/ (_| | (_| |  __/ |   ___) |  __/ (__ \n" +
-" |_| |_|\\___|\\__,_|\\__,_|\\___|_|  |____/ \\___|\\___|\n" +
-"                                                  \n" +
-"  	 By Andrea Lunghi v1.0.2\n";
-
+const Banner = "  _   _                _           ____            \n" +
+	" | | | | ___  __ _  __| | ___ _ __/ ___|  ___  ___ \n" +
+	" | |_| |/ _ \\/ _` |/ _` |/ _ \\ '__\\___ \\ / _ \\/ __|\n" +
+	" |  _  |  __/ (_| | (_| |  __/ |   ___) |  __/ (__ \n" +
+	" |_| |_|\\___|\\__,_|\\__,_|\\___|_|  |____/ \\___|\\___|\n" +
+	"                                                  \n" +
+	"  	 By Andrea Lunghi v1.0.2\n"
 
 func collectTargets(single, file string) ([]string, error) {
 	var targets []string
@@ -50,7 +47,6 @@ func collectTargets(single, file string) ([]string, error) {
 	return targets, nil
 }
 
-
 func parseExtra(raw string) map[string]string {
 	hdrs := make(map[string]string)
 	if raw == "" {
@@ -73,23 +69,19 @@ func parseExtra(raw string) map[string]string {
 	return hdrs
 }
 
-
-
 func DedupeURLs(urls []string) []string {
-    seen := make(map[string]struct{}, len(urls))
-    var out []string
-    for _, u := range urls {
-        if _, ok := seen[u]; ok {
-            continue
-        }
-        seen[u] = struct{}{}
-        out = append(out, u)
-    }
-    return out
+	seen := make(map[string]struct{}, len(urls))
+	var out []string
+	for _, u := range urls {
+		if _, ok := seen[u]; ok {
+			continue
+		}
+		seen[u] = struct{}{}
+		out = append(out, u)
+	}
+	return out
 }
 
 func PrintBanner() {
-       fmt.Print("\n", output.Cyan, Banner, output.Reset, "\n\n")
-    }
-
-
+	fmt.Print("\n", output.Cyan, Banner, output.Reset, "\n\n")
+}

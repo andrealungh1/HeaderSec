@@ -9,7 +9,6 @@ import (
 	"time"
 )
 
-
 func New(timeout time.Duration, insecure bool, proxy string, follow bool, maxRed int) (*http.Client, error) {
 	tr := &http.Transport{
 		DialContext: (&net.Dialer{
@@ -19,7 +18,7 @@ func New(timeout time.Duration, insecure bool, proxy string, follow bool, maxRed
 		TLSHandshakeTimeout: timeout,
 	}
 	if insecure {
-		tr.TLSClientConfig = &tls.Config{InsecureSkipVerify: true} 
+		tr.TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 	}
 	if proxy != "" {
 		pu, err := url.Parse(proxy)

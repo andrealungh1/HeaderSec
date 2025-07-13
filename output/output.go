@@ -11,31 +11,30 @@ import (
 	"golang.org/x/term"
 )
 
+var ShowRecommendedDetails = true
+
 var (
-    
-    ColorEnabled = true
+	ColorEnabled = true
 
-    
-    Red    = "\x1b[31m"
-    Green  = "\x1b[32m"
-    Yellow = "\x1b[33m"
-    Cyan   = "\x1b[36;1m" 
-    Bold   = "\x1b[1m"
-    Reset  = "\x1b[0m"
+	Red    = "\x1b[31m"
+	Green  = "\x1b[32m"
+	Yellow = "\x1b[33m"
+	Cyan   = "\x1b[36;1m"
+	Bold   = "\x1b[1m"
+	Reset  = "\x1b[0m"
 
-    tick  = "✓"
-    cross = "✕"
-    warn  = "!"
+	tick  = "✓"
+	cross = "✕"
+	warn  = "!"
 )
 
 func DisableColors() {
-    if !ColorEnabled {
-        return
-    }
-    ColorEnabled = false
-    Red, Green, Yellow, Cyan, Bold, Reset = "", "", "", "", "", ""
+	if !ColorEnabled {
+		return
+	}
+	ColorEnabled = false
+	Red, Green, Yellow, Cyan, Bold, Reset = "", "", "", "", "", ""
 }
-
 
 var (
 	red = func(s string) string {
@@ -74,17 +73,17 @@ func wrap(s string, limit int) []string {
 }
 
 var recommended = map[string]string{
-	"Strict-Transport-Security":            "max-age=31536000; includeSubDomains",
-	"X-Content-Type-Options":               "nosniff",
-	"Content-Security-Policy":             "default-src 'self'; form-action 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; upgrade-insecure-requests",
-	"X-Permitted-Cross-Domain-Policies":   "none",
-	"Referrer-Policy":                     "no-referrer",
-	"Clear-Site-Data":                     `"cache","cookies","storage"`,
-	"Cross-Origin-Embedder-Policy":        "require-corp",
-	"Cross-Origin-Opener-Policy":          "same-origin",
-	"Cross-Origin-Resource-Policy":        "same-origin",
-	"Permissions-Policy":                  `accelerometer=(), autoplay=(), camera=(), cross-origin-isolated=(), display-capture=(), encrypted-media=(), fullscreen=(), geolocation=(), gyroscope=(), keyboard-map=(), magnetometer=(), microphone=(), midi=(), payment=(), picture-in-picture=(), publickey-credentials-get=(), screen-wake-lock=(), sync-xhr=(self), usb=(), web-share=(), xr-spatial-tracking=(), clipboard-read=(), clipboard-write=(), gamepad=(), hid=(), idle-detection=(), interest-cohort=(), serial=(), unload=()`,
-	"Cache-Control":                       "no-cache, no-store, must-revalidate",
+	"Strict-Transport-Security":         "max-age=31536000; includeSubDomains",
+	"X-Content-Type-Options":            "nosniff",
+	"Content-Security-Policy":           "default-src 'self'; form-action 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; upgrade-insecure-requests",
+	"X-Permitted-Cross-Domain-Policies": "none",
+	"Referrer-Policy":                   "no-referrer",
+	"Clear-Site-Data":                   `"cache","cookies","storage"`,
+	"Cross-Origin-Embedder-Policy":      "require-corp",
+	"Cross-Origin-Opener-Policy":        "same-origin",
+	"Cross-Origin-Resource-Policy":      "same-origin",
+	"Permissions-Policy":                `accelerometer=(), autoplay=(), camera=(), cross-origin-isolated=(), display-capture=(), encrypted-media=(), fullscreen=(), geolocation=(), gyroscope=(), keyboard-map=(), magnetometer=(), microphone=(), midi=(), payment=(), picture-in-picture=(), publickey-credentials-get=(), screen-wake-lock=(), sync-xhr=(self), usb=(), web-share=(), xr-spatial-tracking=(), clipboard-read=(), clipboard-write=(), gamepad=(), hid=(), idle-detection=(), interest-cohort=(), serial=(), unload=()`,
+	"Cache-Control":                     "no-cache, no-store, must-revalidate",
 }
 
 var leaks = []string{
@@ -92,11 +91,11 @@ var leaks = []string{
 }
 
 var deprecated = map[string]string{
-    "Expect-CT":           "N/A",
-    "Public-Key-Pins":     "N/A",
-    "X-XSS-Protection":    "Content-Security-Policy",
-    "Pragma":              "Cache-Control",
-    "Feature-Policy":      "Permissions-Policy",
+	"Expect-CT":        "N/A",
+	"Public-Key-Pins":  "N/A",
+	"X-XSS-Protection": "Content-Security-Policy",
+	"Pragma":           "Cache-Control",
+	"Feature-Policy":   "Permissions-Policy",
 }
 
 type RecFinding struct {
@@ -152,15 +151,22 @@ func ProduceCLI(u string, resp *http.Response, doRec, doLeak, doDep bool) {
 			lines := []string{}
 			switch {
 			case val == "":
+				
 				lines = append(lines, "MISSING")
+			case !ShowRecommendedDetails:
+				
+				icon = green("[" + tick + "]")
+				lines = append(lines, "PRESENT")
 			case strings.EqualFold(val, want):
+				
 				icon = green("[" + tick + "]")
 				lines = append(lines, "OK")
 			default:
+				
 				icon = yellow("[" + warn + "]")
 				lines = append(lines, fmt.Sprintf("DIFF %s", val))
 			}
-			if val == "" || !strings.EqualFold(val, want) {
+			if ShowRecommendedDetails && (val == "" || !strings.EqualFold(val, want)) {
 				lines = append(lines, fmt.Sprintf("Recommended: %s", want))
 			}
 
@@ -239,7 +245,7 @@ func ProduceCLI(u string, resp *http.Response, doRec, doLeak, doDep bool) {
 					branch = "└─"
 				}
 				if rep := deprecated[hdr]; rep != "N/A" {
-    					fmt.Printf(" %s %s %s (use \"%s\" instead)\n", branch, yellow("["+warn+"]"), hdr, deprecated[hdr])
+					fmt.Printf(" %s %s %s (use \"%s\" instead)\n", branch, yellow("["+warn+"]"), hdr, deprecated[hdr])
 				}
 				if !last {
 					fmt.Println(" │")

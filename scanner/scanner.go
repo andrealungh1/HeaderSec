@@ -5,130 +5,125 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/andrealungh1/HeaderSec/output"
 	"net/http"
 	"net/url"
+	"os"
 	"path/filepath"
 	"strings"
 	"sync"
-	"os"
-	"github.com/andrealungh1/HeaderSec/output"
 )
 
 type Config struct {
-	Method                         string
-	Cookie, UserAgent              string
-	ExtraHeaders                   map[string]string
-	PortOverride                   int
+	Method                               string
+	Cookie, UserAgent                    string
+	ExtraHeaders                         map[string]string
+	PortOverride                         int
 	IncludeRec, IncludeLeak, IncludeDepr bool
-	OutputJSON                     string
+	OutputJSON                           string
 }
-
-
-
-
 
 func Run(client *http.Client, cfg Config, targets []string, workers int) {
-    
-    if cfg.OutputJSON != "" {
-        var (
-            mu      sync.Mutex
-            results []json.RawMessage
-            wg      sync.WaitGroup
-            sem     = make(chan struct{}, workers)
-        )
 
-        for _, raw := range targets {
-            wg.Add(1)
-            go func(u string) {
-                defer wg.Done()
-                sem <- struct{}{}
-                defer func() { <-sem }()
+	if cfg.OutputJSON != "" {
+		var (
+			mu      sync.Mutex
+			results []json.RawMessage
+			wg      sync.WaitGroup
+			sem     = make(chan struct{}, workers)
+		)
 
-                parsed, err := url.Parse(u)
-                if err != nil {
-                    output.LogError("Invalid URL (%q): %v", u, err)
-                    return
-                }
-                if cfg.PortOverride > 0 {
-                    parsed.Host = fmt.Sprintf("%s:%d", parsed.Hostname(), cfg.PortOverride)
-                }
+		for _, raw := range targets {
+			wg.Add(1)
+			go func(u string) {
+				defer wg.Done()
+				sem <- struct{}{}
+				defer func() { <-sem }()
 
-                req, _ := http.NewRequest(cfg.Method, parsed.String(), nil)
-                if cfg.Cookie != "" {
-                    req.Header.Set("Cookie", cfg.Cookie)
-                }
-                if cfg.UserAgent != "" {
-                    req.Header.Set("User-Agent", cfg.UserAgent)
-                }
-                for k, v := range cfg.ExtraHeaders {
-                    req.Header.Set(k, v)
-                }
+				parsed, err := url.Parse(u)
+				if err != nil {
+					output.LogError("Invalid URL (%q): %v", u, err)
+					return
+				}
+				if cfg.PortOverride > 0 {
+					parsed.Host = fmt.Sprintf("%s:%d", parsed.Hostname(), cfg.PortOverride)
+				}
 
-                resp, err := client.Do(req)
-                if err != nil {
-                    output.LogError("Request failed: (%s): %v", parsed, err)
-                    return
-                }
-                // fallback GET se HEAD non restituisce header
-                if len(resp.Header) == 0 {
-                    req.Method = http.MethodGet
-                    resp.Body.Close()
-                    resp, err = client.Do(req)
-                    if err != nil {
-                        output.LogError("GET request failed: (%s): %v", parsed, err)
-                        return
-                    }
-                }
+				req, _ := http.NewRequest(cfg.Method, parsed.String(), nil)
+				if cfg.Cookie != "" {
+					req.Header.Set("Cookie", cfg.Cookie)
+				}
+				if cfg.UserAgent != "" {
+					req.Header.Set("User-Agent", cfg.UserAgent)
+				}
+				for k, v := range cfg.ExtraHeaders {
+					req.Header.Set(k, v)
+				}
 
-                data := output.ProduceJSON(parsed.String(), resp, cfg.IncludeRec, cfg.IncludeLeak, cfg.IncludeDepr)
-                resp.Body.Close()
+				resp, err := client.Do(req)
+				if err != nil {
+					output.LogError("Request failed: (%s): %v", parsed, err)
+					return
+				}
+				// fallback GET se HEAD non restituisce header
+				if len(resp.Header) == 0 {
+					req.Method = http.MethodGet
+					resp.Body.Close()
+					resp, err = client.Do(req)
+					if err != nil {
+						output.LogError("GET request failed: (%s): %v", parsed, err)
+						return
+					}
+				}
 
-                mu.Lock()
-                results = append(results, data)
-                mu.Unlock()
-            }(raw)
-        }
-        wg.Wait()
+				data := output.ProduceJSON(parsed.String(), resp, cfg.IncludeRec, cfg.IncludeLeak, cfg.IncludeDepr)
+				resp.Body.Close()
 
-        // serializziamo l’array
-        all, err := json.MarshalIndent(results, "", "  ")
-        if err != nil {
-            output.LogError("Failed to serialize data to JSON: %v", err)
-            return
-        }
+				mu.Lock()
+				results = append(results, data)
+				mu.Unlock()
+			}(raw)
+		}
+		wg.Wait()
 
-        // scriviamo su file o stdout
-        if cfg.OutputJSON == "-" {
-            fmt.Println(string(all))
-        } else {
-            if err := os.WriteFile(cfg.OutputJSON, all, 0o644); err != nil {
-                output.LogError("Error writing to file: %s: %v", cfg.OutputJSON, err)
-            }
-        }
-        return
-    }
+		// serializziamo l’array
+		all, err := json.MarshalIndent(results, "", "  ")
+		if err != nil {
+			output.LogError("Failed to serialize data to JSON: %v", err)
+			return
+		}
 
-    // Altrimenti modalità CLI/color originale
-    if len(targets) == 1 || workers <= 1 {
-        for i, t := range targets {
-            scan(i, t, client, cfg)
-        }
-    } else {
-        var wg sync.WaitGroup
-        sem := make(chan struct{}, workers)
-        for i, t := range targets {
-            wg.Add(1)
-            go func(i int, t string) {
-                defer wg.Done()
-                sem <- struct{}{}
-                defer func() { <-sem }()
-                scan(i, t, client, cfg)
-            }(i, t)
-        }
-        wg.Wait()
-    }
+		// scriviamo su file o stdout
+		if cfg.OutputJSON == "-" {
+			fmt.Println(string(all))
+		} else {
+			if err := os.WriteFile(cfg.OutputJSON, all, 0o644); err != nil {
+				output.LogError("Error writing to file: %s: %v", cfg.OutputJSON, err)
+			}
+		}
+		return
+	}
+
+	// Altrimenti modalità CLI/color originale
+	if len(targets) == 1 || workers <= 1 {
+		for i, t := range targets {
+			scan(i, t, client, cfg)
+		}
+	} else {
+		var wg sync.WaitGroup
+		sem := make(chan struct{}, workers)
+		for i, t := range targets {
+			wg.Add(1)
+			go func(i int, t string) {
+				defer wg.Done()
+				sem <- struct{}{}
+				defer func() { <-sem }()
+				scan(i, t, client, cfg)
+			}(i, t)
+		}
+		wg.Wait()
+	}
 }
-
 
 // scan – singolo URL; nessun print colorato qui dentro.
 func scan(idx int, raw string, client *http.Client, cfg Config) {

@@ -106,6 +106,8 @@ Scan behavior:
         Include only info-leaking headers check
   -depr
         Include only deprecated headers check
+  -no-raccomanded
+        Print only PRESENT or MISSING without printing the recommended values
 
 Output:
   -json string
